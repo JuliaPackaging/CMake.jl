@@ -100,6 +100,9 @@ function generate_steps(dep::LibraryDependency, h::CMakeProcess, provider_opts)
     end
     haskey(opts,:env) && merge!(env,opts[:env])
     opts[:env] = env
+    if get(provider_opts, :force_rebuild, false)
+        warn("force_rebuild option is not supported for CMakeProcess. It will be ignored")
+    end
     steps |= CMakeBuild(; opts...)
     steps
 end
