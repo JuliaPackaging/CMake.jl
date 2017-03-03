@@ -20,7 +20,7 @@ elseif is_windows()
     download_name = "cmake-$(cmake_version)-win32-x86"
     filename = "$(download_name).zip"
     binary = "cmake.exe"
-    binary_path = binary
+    binary_path = joinpath("bin", binary)
 else
     error("Sorry, I couldn't recognize your operating system.")
 end
@@ -35,7 +35,7 @@ process = (@build_steps begin
                          joinpath(basedir, "downloads"), 
                          "")
             CreateDirectory(joinpath(prefix, "bin"))
-            () -> cp(
+            () -> symlink(
                 joinpath(basedir, "downloads", 
                          download_name, binary_path), 
                 joinpath(prefix, "bin", binary))
