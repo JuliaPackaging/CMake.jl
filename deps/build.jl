@@ -28,7 +28,7 @@ end
 url = "$(base_url)/$(filename)"
 
 process = (@build_steps begin
-    FileRule(joinpath(prefix, "bin", "cmake"), 
+    FileRule(joinpath(prefix, "bin", binary), 
         (@build_steps begin
             FileDownloader(url, joinpath(basedir, "downloads", filename))
             FileUnpacker(joinpath(basedir, "downloads", filename),
