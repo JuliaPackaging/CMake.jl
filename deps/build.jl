@@ -46,7 +46,7 @@ run(process)
 
 open(joinpath(dirname(@__FILE__), "deps.jl"), "w") do f
     write(f, """
-const cmake_executable = "$(joinpath(prefix, "bin", binary))"
+const cmake_executable = "$(escape_string(joinpath(prefix, "bin", binary)))"
 """)
 
 end
