@@ -1,4 +1,4 @@
-using CMakeBuilds
+using CMakeWrapper
 using Base.Test
 
 
