@@ -4,16 +4,16 @@ module CMakeWrapper
 
 using Parameters: @with_kw
 using BinDeps
-using BinDeps: BuildProcess, 
-               BuildStep, 
-               @dependent_steps, 
+using BinDeps: BuildProcess,
+               BuildStep,
+               @dependent_steps,
                LibraryDependency,
                gethelper,
                builddir,
                stringarray,
                adjust_env
-import BinDeps: lower, 
-                provider, 
+import BinDeps: lower,
+                provider,
                 generate_steps
 export cmake_executable, CMakeBuild, CMakeProcess
 
@@ -33,6 +33,7 @@ const dlext = Libdl.dlext
     libtarget::Vector{AbstractString} = String[]
     installed_libpath::Vector{AbstractString} = String[]
     cmake_args::Vector{AbstractString} = String[]
+    targetname::AbstractString = "install"
     env::Dict{Any, Any} = Dict{Any, Any}()
 end
 
@@ -42,14 +43,18 @@ function lower(s::CMakeBuild, collection)
     for arg in s.cmake_args
         cmake_command = `$cmake_command $arg`
     end
+    build_command = `$cmake_executable --build .`
+    if !isempty(s.targetname)
+        build_command = `$build_command --target $(s.targetname)`
+    end
     @dependent_steps begin
         CreateDirectory(s.builddir)
         begin
             ChangeDirectory(s.builddir)
             FileRule(joinpath(s.builddir, "CMakeCache.txt"),
                      setenv(`$cmake_command $(s.srcdir)`, env))
-            FileRule(s.installed_libpath, 
-                     setenv(`$cmake_executable --build . --target install`, env))
+            FileRule(s.installed_libpath,
+                     setenv(build_command, env))
         end
     end
 end
