@@ -3,7 +3,7 @@ using BinDeps
 basedir = dirname(@__FILE__)
 prefix = joinpath(basedir, "usr")
 
-cmake_version = v"3.8.0-rc1"
+cmake_version = v"3.7.2"
 base_url = "https://cmake.org/files/v$(cmake_version.major).$(cmake_version.minor)"
 
 @static if is_linux()
