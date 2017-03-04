@@ -69,6 +69,9 @@ CMakeProcess(; opts...) = CMakeProcess(nothing, Dict{Any, Any}(opts))
 provider(::Type{CMakeProcess}, cm::CMakeProcess; opts...) = cm
 
 function generate_steps(dep::LibraryDependency, h::CMakeProcess, provider_opts)
+    # Shamelessly copied from BinDeps.jl, which is  distributed under
+    # the MIT License, and Copyright (c) 2012: Keno Fischer and other
+    # contributors. See LICENSE.md for license terms. 
     if h.source === nothing
         h.source = gethelper(dep,Sources)
     end
@@ -77,11 +80,12 @@ function generate_steps(dep::LibraryDependency, h::CMakeProcess, provider_opts)
     end
     h.source[1] === nothing && error("Could not obtain sources for dependency $(dep.name)")
     steps = lower(generate_steps(dep,h.source...))
-    opts = Dict()
-    opts[:srcdir]   = srcdir(dep,h.source...)
-    opts[:prefix]   = usrdir(dep)
-    opts[:builddir] = joinpath(builddir(dep),dep.name)
-    merge!(opts,h.opts)
+    opts = Dict{Symbol, Any}(
+        :srcdir => srcdir(dep,h.source...),
+        :prefix => usrdir(dep),
+        :builddir => joinpath(builddir(dep),dep.name),
+        h.opts...
+    )
     if haskey(opts,:installed_libname)
         !haskey(opts,:installed_libpath) || error("Can't specify both installed_libpath and installed_libname")
         opts[:installed_libpath] = String[joinpath(libdir(dep),opts[:installed_libname])]
