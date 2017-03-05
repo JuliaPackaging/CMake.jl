@@ -18,17 +18,21 @@ function install_binaries(file_base, file_ext, binary_dir)
     binary_path = joinpath(basedir, "downloads", file_base, binary_dir)
 
     @static if is_windows()
-        install_tool = cp
+        install_step = () -> begin
+            for dir in readdir(dirname(binary_path))
+                cp(joinpath(dirname(binary_path), dir), 
+                   joinpath(prefix, dir))
+            end
+        end
     else
-        install_tool = symlink
-    end
-
-    install_step = () -> begin
-        for file in readdir(binary_path)
-            install_tool(joinpath(binary_path, file), 
-                         joinpath(prefix, "bin", file))
+        install_step = () -> begin
+            for file in readdir(binary_path)
+                symlink(joinpath(binary_path, file), 
+                        joinpath(prefix, "bin", file))
+            end
         end
     end
+
 
     (@build_steps begin
         FileRule(joinpath(prefix, "bin", binary_name), 
