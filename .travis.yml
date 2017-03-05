@@ -23,6 +23,8 @@ matrix:
       env: "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE=1"
 notifications:
   email: false
+branches:
+  only: master
 # uncomment the following lines to override the default test script
 #script:
 #  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
