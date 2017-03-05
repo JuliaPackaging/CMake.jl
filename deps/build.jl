@@ -21,7 +21,8 @@ function install_binaries(file_base, file_ext, binary_dir)
         install_step = () -> begin
             for dir in readdir(dirname(binary_path))
                 cp(joinpath(dirname(binary_path), dir), 
-                   joinpath(prefix, dir))
+                   joinpath(prefix, dir);
+                   remove_destination=true)
             end
         end
     else
