@@ -65,10 +65,11 @@ function install_from_source(file_base, file_ext)
     end)
 end
 
+force_source_build = lowercase(get(ENV, "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
 
 process = @static if is_linux()
     arch = strip(readstring(`arch`))
-    if arch == "x86_64"
+    if arch == "x86_64" && !force_source_build
         install_binaries(
             "cmake-$(cmake_version)-Linux-x86_64",
             "tar.gz",
@@ -77,10 +78,14 @@ process = @static if is_linux()
         install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
 elseif is_apple()
-    install_binaries(
-        "cmake-$(cmake_version)-Darwin-x86_64",
-        "tar.gz",
-        joinpath("CMake.app", "Contents", "bin"))
+    if !force_source_build
+        install_binaries(
+            "cmake-$(cmake_version)-Darwin-x86_64",
+            "tar.gz",
+            joinpath("CMake.app", "Contents", "bin"))
+    else
+        install_from_source("cmake-$(cmake_version)", "tar.gz")
+    end
 elseif is_windows()
     if sizeof(Int) == 8
         install_binaries(

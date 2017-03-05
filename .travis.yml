@@ -6,6 +6,9 @@ os:
 julia:
   - 0.5
   - 0.6
+env:
+  - ""
+  - "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE=1"
 notifications:
   email: false
 # uncomment the following lines to override the default test script
