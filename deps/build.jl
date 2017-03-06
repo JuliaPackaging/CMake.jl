@@ -73,8 +73,7 @@ end
 force_source_build = lowercase(get(ENV, "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
 
 process = @static if is_linux()
-    arch = strip(readstring(`arch`))
-    if arch == "x86_64" && !force_source_build
+    if Sys.ARCH == :x86_64 && !force_source_build
         install_binaries(
             "cmake-$(cmake_version)-Linux-x86_64",
             "tar.gz",
