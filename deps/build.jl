@@ -34,7 +34,19 @@ function install_binaries(file_base, file_ext, binary_dir)
         end
     end
 
-
+    function test_step()
+        try
+            run(`$(joinpath(prefix, "bin", binary_name)) --version`)
+        catch e
+            error("""
+Running the precompiled cmake binary failed with the error
+$(e)
+To build from source instead, run:
+    julia> ENV["CMAKEWRAPPER_JL_BUILD_FROM_SOURCE"] = 1
+    julia> Pkg.build("CMakeWrapper")
+""")
+        end
+    end
     (@build_steps begin
         FileRule(joinpath(prefix, "bin", binary_name), 
             (@build_steps begin
@@ -44,6 +56,7 @@ function install_binaries(file_base, file_ext, binary_dir)
                              "")
                 CreateDirectory(joinpath(prefix, "bin"))
                 install_step
+                test_step
             end))
     end)
 end
