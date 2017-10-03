@@ -1,12 +1,13 @@
 using BinDeps
 using BinDeps: MakeTargets
+using Compat
 
 basedir = dirname(@__FILE__)
 prefix = joinpath(basedir, "usr")
 
 cmake_version = v"3.7.2"
 base_url = "https://cmake.org/files/v$(cmake_version.major).$(cmake_version.minor)"
-@static if is_windows()
+@static if Compat.Sys.iswindows()
     binary_name = "cmake.exe"
 else
     binary_name = "cmake"
@@ -17,7 +18,7 @@ function install_binaries(file_base, file_ext, binary_dir)
     url = "$(base_url)/$(filename)"
     binary_path = joinpath(basedir, "downloads", file_base, binary_dir)
 
-    @static if is_windows()
+    @static if Compat.Sys.iswindows()
         install_step = () -> begin
             for dir in readdir(dirname(binary_path))
                 cp(joinpath(dirname(binary_path), dir), 
@@ -85,7 +86,7 @@ end
 
 force_source_build = lowercase(get(ENV, "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
 
-process = @static if is_linux()
+process = @static if Compat.Sys.islinux()
     if Sys.ARCH == :x86_64 && !force_source_build
         install_binaries(
             "cmake-$(cmake_version)-Linux-x86_64",
@@ -94,7 +95,7 @@ process = @static if is_linux()
     else
         install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
-elseif is_apple()
+elseif Compat.Sys.isapple()
     if !force_source_build
         install_binaries(
             "cmake-$(cmake_version)-Darwin-x86_64",
@@ -103,7 +104,7 @@ elseif is_apple()
     else
         install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
-elseif is_windows()
+elseif Compat.Sys.iswindows()
     if sizeof(Int) == 8
         install_binaries(
             "cmake-$(cmake_version)-win64-x64",

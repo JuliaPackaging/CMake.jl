@@ -12,6 +12,7 @@ using BinDeps: BuildProcess,
                builddir,
                stringarray,
                adjust_env
+using Compat
 import BinDeps: lower,
                 provider,
                 generate_steps
@@ -26,7 +27,7 @@ end
 
 const dlext = Libdl.dlext
 
-@with_kw type CMakeBuild <: BuildStep
+@with_kw struct CMakeBuild <: BuildStep
     srcdir::AbstractString = ""
     builddir::AbstractString = ""
     prefix::AbstractString = ""
@@ -59,7 +60,7 @@ function lower(s::CMakeBuild, collection)
     end
 end
 
-type CMakeProcess <: BuildProcess
+mutable struct CMakeProcess <: BuildProcess
     source
     opts
 end
@@ -97,9 +98,9 @@ function generate_steps(dep::LibraryDependency, h::CMakeProcess, provider_opts)
         opts[:libtarget] = String[x*"."*dlext for x in stringarray(dep.properties[:aliases])]
     end
     env = Dict{String,String}()
-    if is_unix()
+    if Compat.Sys.isunix()
         env["PATH"] = bindir(dep)*":"*ENV["PATH"]
-    elseif is_windows()
+    elseif Compat.Sys.iswindows()
         env["PATH"] = bindir(dep)*";"*ENV["PATH"]
     end
     haskey(opts,:env) && merge!(env,opts[:env])
