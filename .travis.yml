@@ -17,13 +17,12 @@ matrix:
     - os: osx
       julia: 0.6
       env: "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE=1"
+ allow_failures:
+   - julia: nightly
 notifications:
   email: false
 branches:
   only: master
-matrix:
- allow_failures:
- - julia: nightly
 # uncomment the following lines to override the default test script
 #script:
 #  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
