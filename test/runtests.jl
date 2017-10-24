@@ -1,6 +1,7 @@
 using CMakeWrapper
 using BinDeps
-using Base.Test
+using Compat
+using Compat.Test
 
 
 @test isfile(cmake_executable)
