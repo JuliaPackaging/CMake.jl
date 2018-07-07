@@ -12,7 +12,7 @@ using BinDeps: BuildProcess,
                builddir,
                stringarray,
                adjust_env
-using Compat
+using Libdl
 import BinDeps: lower,
                 provider,
                 generate_steps
@@ -72,7 +72,7 @@ provider(::Type{CMakeProcess}, cm::CMakeProcess; opts...) = cm
 function generate_steps(dep::LibraryDependency, h::CMakeProcess, provider_opts)
     # Shamelessly copied from BinDeps.jl, which is  distributed under
     # the MIT License, and Copyright (c) 2012: Keno Fischer and other
-    # contributors. See LICENSE.md for license terms. 
+    # contributors. See LICENSE.md for license terms.
     if h.source === nothing
         h.source = gethelper(dep,Sources)
     end
