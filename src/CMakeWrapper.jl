@@ -98,9 +98,9 @@ function generate_steps(dep::LibraryDependency, h::CMakeProcess, provider_opts)
         opts[:libtarget] = String[x*"."*dlext for x in stringarray(dep.properties[:aliases])]
     end
     env = Dict{String,String}()
-    if Compat.Sys.isunix()
+    if Sys.isunix()
         env["PATH"] = bindir(dep)*":"*ENV["PATH"]
-    elseif Compat.Sys.iswindows()
+    elseif Sys.iswindows()
         env["PATH"] = bindir(dep)*";"*ENV["PATH"]
     end
     haskey(opts,:env) && merge!(env,opts[:env])

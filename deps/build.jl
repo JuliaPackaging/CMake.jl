@@ -1,13 +1,12 @@
 using BinDeps
 using BinDeps: MakeTargets
-using Compat
 
 basedir = dirname(@__FILE__)
 prefix = joinpath(basedir, "usr")
 
 cmake_version = v"3.7.2"
 base_url = "https://cmake.org/files/v$(cmake_version.major).$(cmake_version.minor)"
-@static if Compat.Sys.iswindows()
+@static if Sys.iswindows()
     binary_name = "cmake.exe"
 else
     binary_name = "cmake"
@@ -18,10 +17,10 @@ function install_binaries(file_base, file_ext, binary_dir)
     url = "$(base_url)/$(filename)"
     binary_path = joinpath(basedir, "downloads", file_base, binary_dir)
 
-    @static if Compat.Sys.iswindows()
+    @static if Sys.iswindows()
         install_step = () -> begin
             for dir in readdir(dirname(binary_path))
-                cp(joinpath(dirname(binary_path), dir), 
+                cp(joinpath(dirname(binary_path), dir),
                    joinpath(prefix, dir);
                    remove_destination=true)
             end
@@ -29,7 +28,7 @@ function install_binaries(file_base, file_ext, binary_dir)
     else
         install_step = () -> begin
             for file in readdir(binary_path)
-                symlink(joinpath(binary_path, file), 
+                symlink(joinpath(binary_path, file),
                         joinpath(prefix, "bin", file))
             end
         end
@@ -49,11 +48,11 @@ To build from source instead, run:
         end
     end
     (@build_steps begin
-        FileRule(joinpath(prefix, "bin", binary_name), 
+        FileRule(joinpath(prefix, "bin", binary_name),
             (@build_steps begin
                 FileDownloader(url, joinpath(basedir, "downloads", filename))
                 FileUnpacker(joinpath(basedir, "downloads", filename),
-                             joinpath(basedir, "downloads"), 
+                             joinpath(basedir, "downloads"),
                              "")
                 CreateDirectory(joinpath(prefix, "bin"))
                 install_step
@@ -67,12 +66,12 @@ function install_from_source(file_base, file_ext)
     url = "$(base_url)/$(filename)"
 
     (@build_steps begin
-        FileRule(joinpath(prefix, "bin", binary_name), 
+        FileRule(joinpath(prefix, "bin", binary_name),
             (@build_steps begin
                 FileDownloader(url, joinpath(basedir, "downloads", filename))
                 CreateDirectory(joinpath(basedir, "src"))
                 FileUnpacker(joinpath(basedir, "downloads", filename),
-                             joinpath(basedir, "src"), 
+                             joinpath(basedir, "src"),
                              "")
                 begin
                     ChangeDirectory(joinpath(basedir, "src", file_base))
@@ -86,7 +85,7 @@ end
 
 force_source_build = lowercase(get(ENV, "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
 
-process = @static if Compat.Sys.islinux()
+process = @static if Sys.islinux()
     if Sys.ARCH == :x86_64 && !force_source_build
         install_binaries(
             "cmake-$(cmake_version)-Linux-x86_64",
@@ -95,7 +94,7 @@ process = @static if Compat.Sys.islinux()
     else
         install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
-elseif Compat.Sys.isapple()
+elseif Sys.isapple()
     if !force_source_build
         install_binaries(
             "cmake-$(cmake_version)-Darwin-x86_64",
@@ -104,7 +103,7 @@ elseif Compat.Sys.isapple()
     else
         install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
-elseif Compat.Sys.iswindows()
+elseif Sys.iswindows()
     if sizeof(Int) == 8
         install_binaries(
             "cmake-$(cmake_version)-win64-x64",
