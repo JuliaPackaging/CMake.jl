@@ -8,15 +8,15 @@ matrix:
       julia: nightly
     - os: linux
       julia: 0.7
-      env: "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE=1"
+      env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
     - os: linux
       julia: nightly
-      env: "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE=1"
+      env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
     - os: osx
       julia: 0.7
     - os: osx
       julia: 0.7
-      env: "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE=1"
+      env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
   # allow_failures:
   #   - julia: nightly
 notifications:

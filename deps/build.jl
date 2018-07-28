@@ -42,7 +42,7 @@ function install_binaries(file_base, file_ext, binary_dir)
 Running the precompiled cmake binary failed with the error
 $(e)
 To build from source instead, run:
-    julia> ENV["CMAKEWRAPPER_JL_BUILD_FROM_SOURCE"] = 1
+    julia> ENV["CMAKE_JL_BUILD_FROM_SOURCE"] = 1
     julia> Pkg.build("CMake")
 """)
         end
@@ -83,7 +83,7 @@ function install_from_source(file_base, file_ext)
     end)
 end
 
-force_source_build = lowercase(get(ENV, "CMAKEWRAPPER_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
+force_source_build = lowercase(get(ENV, "CMAKE_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
 
 process = @static if Sys.islinux()
     if Sys.ARCH == :x86_64 && !force_source_build
