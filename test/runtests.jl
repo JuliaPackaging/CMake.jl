@@ -1,4 +1,4 @@
-using CMakeWrapper
+using CMake
 using BinDeps
 using Test
 
@@ -8,7 +8,7 @@ run(`$cmake_executable --version`)
 
 ctx = BinDeps.PackageContext(true,
                              pwd(),
-                             "CMakeWrapperTest",
+                             "CMakeTest",
                              [])
 libdep = BinDeps._library_dependency(ctx, "libfoo")
 libdep.helpers = [(BinDeps.NetworkSource(URI("src")), Dict{Symbol, Any}(:filename=>"foo.zip"))]

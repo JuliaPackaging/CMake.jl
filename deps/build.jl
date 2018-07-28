@@ -43,7 +43,7 @@ Running the precompiled cmake binary failed with the error
 $(e)
 To build from source instead, run:
     julia> ENV["CMAKEWRAPPER_JL_BUILD_FROM_SOURCE"] = 1
-    julia> Pkg.build("CMakeWrapper")
+    julia> Pkg.build("CMake")
 """)
         end
     end
@@ -125,7 +125,7 @@ run(process)
 
 open(joinpath(dirname(@__FILE__), "deps.jl"), "w") do f
     write(f, """
-const cmake_executable = "$(escape_string(joinpath(prefix, "bin", binary_name)))"
+const cmake = "$(escape_string(joinpath(prefix, "bin", binary_name)))"
 """)
 
 end
