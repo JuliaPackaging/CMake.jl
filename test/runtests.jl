@@ -1,16 +1,4 @@
-using CMake
-using BinDeps
-using Test
+using CMake, Test
 
-
-@test isfile(cmake_executable)
-run(`$cmake_executable --version`)
-
-ctx = BinDeps.PackageContext(true,
-                             pwd(),
-                             "CMakeTest",
-                             [])
-libdep = BinDeps._library_dependency(ctx, "libfoo")
-libdep.helpers = [(BinDeps.NetworkSource(URI("src")), Dict{Symbol, Any}(:filename=>"foo.zip"))]
-process = CMakeProcess()
-steps = BinDeps.generate_steps(libdep, process, Dict())
+@test isfile(cmake)
+@test occursin("cmake version", read(`$cmake --version`, String))
