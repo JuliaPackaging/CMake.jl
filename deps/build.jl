@@ -22,7 +22,7 @@ function install_binaries(file_base, file_ext, binary_dir)
             for dir in readdir(dirname(binary_path))
                 cp(joinpath(dirname(binary_path), dir),
                    joinpath(prefix, dir);
-                   remove_destination=true)
+                   force=true)
             end
         end
     else
