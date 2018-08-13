@@ -5,6 +5,8 @@ matrix:
     - os: linux
       julia: 0.7
     - os: linux
+      julia: 1.0
+    - os: linux
       julia: nightly
     - os: linux
       julia: 0.7
@@ -15,10 +17,12 @@ matrix:
     - os: osx
       julia: 0.7
     - os: osx
+      julia: 1.0
+    - os: osx
       julia: 0.7
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
-  # allow_failures:
-  #   - julia: nightly
+  allow_failures:
+    - julia: nightly
 notifications:
   email: false
 branches:
