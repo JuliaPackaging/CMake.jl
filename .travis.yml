@@ -27,3 +27,5 @@ notifications:
   email: false
 branches:
   only: master
+after_success:
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
