@@ -15,12 +15,18 @@ matrix:
       julia: 1.0
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
     - os: linux
+      julia: 1.0
+      env: "BINARYPROVIDER_COPYDEREF=true"
+    - os: linux
       julia: nightly
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
     - os: osx
       julia: 0.7
     - os: osx
       julia: 1.0
+    - os: osx
+      julia: 1.0
+      env: "BINARYPROVIDER_COPYDEREF=true"
     - os: osx
       julia: 1.0
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
