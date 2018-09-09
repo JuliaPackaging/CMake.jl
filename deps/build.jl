@@ -12,10 +12,35 @@ else
     binary_name = "cmake"
 end
 
+function probe_symlink_creation(dest::AbstractString)
+    while !isdir(dest)
+        dest = dirname(dest)
+    end
+
+    # Build arbitrary (non-existent) file path name
+    link_path = joinpath(dest, "binaryprovider_symlink_test")
+    while ispath(link_path)
+        link_path *= "1"
+    end
+
+    try
+        symlink("foo", link_path)
+        return true
+    catch e
+        if isa(e, Base.IOError)
+            return false
+        end
+        rethrow(e)
+    finally
+        rm(link_path; force=true)
+    end
+end
+
 function install_binaries(file_base, file_ext, binary_dir)
     filename = "$(file_base).$(file_ext)"
     url = "$(base_url)/$(filename)"
     binary_path = joinpath(basedir, "downloads", file_base, binary_dir)
+    copyderef = get(ENV, "BINARYPROVIDER_COPYDEREF", "") == "true" || !probe_symlink_creation(binary_path)
 
     @static if Sys.iswindows()
         install_step = () -> begin
@@ -28,8 +53,14 @@ function install_binaries(file_base, file_ext, binary_dir)
     else
         install_step = () -> begin
             for file in readdir(binary_path)
-                symlink(joinpath(binary_path, file),
+                if !copyderef
+                    symlink(joinpath(binary_path, file),
                         joinpath(prefix, "bin", file))
+                else
+                    cp(joinpath(binary_path, file),
+                        joinpath(prefix, "bin", file);
+                        force=true)
+                end
             end
         end
     end

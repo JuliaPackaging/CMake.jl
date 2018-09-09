@@ -5,21 +5,43 @@ matrix:
     - os: linux
       julia: 0.7
     - os: linux
+      julia: 1.0
+    - os: linux
       julia: nightly
     - os: linux
       julia: 0.7
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
+    - os: linux
+      julia: 1.0
+      env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
+    - os: linux
+      julia: 1.0
+      env: "BINARYPROVIDER_COPYDEREF=true"
     - os: linux
       julia: nightly
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
     - os: osx
       julia: 0.7
     - os: osx
-      julia: 0.7
+      julia: 1.0
+    - os: osx
+      julia: 1.0
+      env: "BINARYPROVIDER_COPYDEREF=true"
+    - os: osx
+      julia: 1.0
       env: "CMAKE_JL_BUILD_FROM_SOURCE=1"
-  # allow_failures:
-  #   - julia: nightly
+  allow_failures:
+    - julia: nightly
 notifications:
   email: false
 branches:
   only: master
+before_script:
+  # Every 30 seconds, look for the build log file. If it exists, then
+  # start watching its contents and printing them to stdout as they
+  # change. This has two effects:
+  #   1. it avoids Travis timing out because the build outputs nothing
+  #   2. it makes it more obvious what part of the build, if any, gets stuck
+  - while sleep 30; do tail ~/build/JuliaPackaging/CMake.jl/deps/build.log -f ; done &
+after_success:
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
