@@ -4,7 +4,7 @@ using BinDeps: MakeTargets
 basedir = dirname(@__FILE__)
 prefix = joinpath(basedir, "usr")
 
-cmake_version = v"3.7.2"
+cmake_version = v"3.12.3"
 base_url = "https://cmake.org/files/v$(cmake_version.major).$(cmake_version.minor)"
 @static if Sys.iswindows()
     binary_name = "cmake.exe"
