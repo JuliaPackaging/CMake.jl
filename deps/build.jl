@@ -5,7 +5,7 @@ basedir = dirname(@__FILE__)
 prefix = joinpath(basedir, "usr")
 
 cmake_version = v"3.12.3"
-base_url = "https://cmake.org/files/v$(cmake_version.major).$(cmake_version.minor)"
+base_url = "https://github.com/Kitware/CMake/releases/download/v$(cmake_version)"
 @static if Sys.iswindows()
     binary_name = "cmake.exe"
 else
