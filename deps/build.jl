@@ -130,7 +130,7 @@ process = @static if Sys.isunix()
                 joinpath("CMake.app", "Contents", "bin"))
         end
     end
-    if result !== nothing
+    if result === nothing
         result = install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
     result
