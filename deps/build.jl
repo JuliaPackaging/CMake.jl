@@ -116,22 +116,23 @@ end
 
 force_source_build = lowercase(get(ENV, "CMAKE_JL_BUILD_FROM_SOURCE", "")) in ["1", "true"]
 
-process = @static if Sys.islinux()
-    if Sys.ARCH == :x86_64 && !force_source_build
-        install_binaries(
-            "cmake-$(cmake_version)-Linux-x86_64",
-            "tar.gz",
-            "bin")
-    else
-        install_from_source("cmake-$(cmake_version)", "tar.gz")
-    end
-elseif Sys.isapple()
+process = @static if Sys.isunix()
+    done = false
     if !force_source_build
-        install_binaries(
-            "cmake-$(cmake_version)-Darwin-x86_64",
-            "tar.gz",
-            joinpath("CMake.app", "Contents", "bin"))
-    else
+        if Sys.islinux() && Sys.ARCH == :x86_64
+            install_binaries(
+                "cmake-$(cmake_version)-Linux-x86_64",
+                "tar.gz", "bin")
+            done = true
+        elseif Sys.isapple()
+            install_binaries(
+                "cmake-$(cmake_version)-Darwin-x86_64",
+                "tar.gz",
+                joinpath("CMake.app", "Contents", "bin"))
+            done = true
+        end
+    end
+    if !done
         install_from_source("cmake-$(cmake_version)", "tar.gz")
     end
 elseif Sys.iswindows()
