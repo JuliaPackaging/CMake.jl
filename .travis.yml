@@ -13,6 +13,7 @@ julia:
   - nightly
 env:
   matrix:
+    - ""
     - "CMAKE_JL_BUILD_FROM_SOURCE=1"
     - "BINARYPROVIDER_COPYDEREF=true"
     - "CMAKE_JL_BUILD_FROM_SOURCE=1"
