@@ -154,6 +154,8 @@ end
 
 run(process)
 
+rm(joinpath(basedir, "downloads"), recursive=true)
+
 open(joinpath(dirname(@__FILE__), "deps.jl"), "w") do f
     write(f, """
 const cmake = "$(escape_string(joinpath(prefix, "bin", binary_name)))"
