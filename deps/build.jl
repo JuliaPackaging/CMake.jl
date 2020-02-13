@@ -105,12 +105,14 @@ function install_from_source(file_base, file_ext)
                 FileUnpacker(joinpath(basedir, "downloads", filename),
                              joinpath(basedir, "src"),
                              "")
+                () -> rm(joinpath(basedir, "downloads", filename))
                 begin
                     ChangeDirectory(joinpath(basedir, "src", file_base))
                     `./configure --prefix=$(prefix)`
                     MakeTargets()
                     MakeTargets("install")
-                end
+                end   
+                () -> rm(joinpath(basedir, "src"), recursive=true)
             end))
     end)
 end
@@ -133,7 +135,6 @@ process = @static if Sys.isunix()
     end
     if result === nothing
         result = install_from_source("cmake-$(cmake_version)", "tar.gz")
-        rm(joinpath(basedir, "src"), recursive=true)
     end
     result
 elseif Sys.iswindows()
