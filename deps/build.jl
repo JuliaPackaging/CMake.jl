@@ -85,6 +85,7 @@ To build from source instead, run:
                 FileUnpacker(joinpath(basedir, "downloads", filename),
                              joinpath(basedir, "downloads"),
                              "")
+                () -> rm(joinpath(basedir, "downloads", filename))
                 CreateDirectory(joinpath(prefix, "bin"))
                 install_step
                 test_step
@@ -132,6 +133,7 @@ process = @static if Sys.isunix()
     end
     if result === nothing
         result = install_from_source("cmake-$(cmake_version)", "tar.gz")
+        rm(joinpath(basedir, "src"), recursive=true)
     end
     result
 elseif Sys.iswindows()
@@ -153,8 +155,6 @@ else
 end
 
 run(process)
-
-rm(joinpath(basedir, "downloads"), recursive=true)
 
 open(joinpath(dirname(@__FILE__), "deps.jl"), "w") do f
     write(f, """
