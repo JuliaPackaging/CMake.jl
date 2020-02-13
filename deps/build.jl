@@ -85,6 +85,7 @@ To build from source instead, run:
                 FileUnpacker(joinpath(basedir, "downloads", filename),
                              joinpath(basedir, "downloads"),
                              "")
+                () -> rm(joinpath(basedir, "downloads", filename))
                 CreateDirectory(joinpath(prefix, "bin"))
                 install_step
                 test_step
@@ -104,12 +105,14 @@ function install_from_source(file_base, file_ext)
                 FileUnpacker(joinpath(basedir, "downloads", filename),
                              joinpath(basedir, "src"),
                              "")
+                () -> rm(joinpath(basedir, "downloads", filename))
                 begin
                     ChangeDirectory(joinpath(basedir, "src", file_base))
                     `./configure --prefix=$(prefix)`
                     MakeTargets()
                     MakeTargets("install")
-                end
+                end   
+                () -> rm(joinpath(basedir, "src"), recursive=true)
             end))
     end)
 end
